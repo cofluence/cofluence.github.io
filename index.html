@@ -14,18 +14,18 @@
             --gray: #333333;
             --light-gray: #444444;
         }
-
+    
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+    
         html, body {
             height: 100%;
             overflow-x: hidden;
         }
-
+    
         body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--black);
@@ -33,14 +33,14 @@
             line-height: 1.6;
             font-size: 18px;
         }
-
+    
         #background-canvas {
             position: fixed;
             top: 0;
             left: 0;
             z-index: -1;
         }
-
+    
         .container {
             width: 90%;
             max-width: 1200px;
@@ -48,7 +48,7 @@
             overflow: hidden;
             position: relative;
         }
-
+    
         header {
             background: rgba(34, 34, 34, 0.8);
             padding: 1rem 0;
@@ -56,41 +56,41 @@
             width: 100%;
             z-index: 1000;
         }
-
+    
         .logo {
             float: left;
             font-size: 1.8rem;
             font-weight: bold;
         }
-
+    
         .logo span:first-child {
             color: var(--red);
         }
-
+    
         nav {
             float: right;
         }
-
+    
         nav ul {
             list-style: none;
         }
-
+    
         nav ul li {
             display: inline-block;
             margin-left: 1.5rem;
         }
-
+    
         nav ul li a {
             color: var(--white);
             text-decoration: none;
             transition: color 0.3s ease;
             font-size: 1.1rem;
         }
-
+    
         nav ul li a:hover {
             color: var(--red);
         }
-
+    
         .hero {
             min-height: 100vh;
             display: flex;
@@ -100,21 +100,21 @@
             text-align: center;
             padding: 2rem;
         }
-
+    
         .hero h1 {
             font-size: 4rem;
             margin-bottom: 1rem;
         }
-
+    
         .hero h1 span:first-child {
             color: var(--red);
         }
-
+    
         .hero p {
             font-size: 1.5rem;
             margin-bottom: 2rem;
         }
-
+    
         .video-container {
             margin-top: 2rem;
             max-width: 100%;
@@ -122,7 +122,7 @@
             margin-left: auto;
             margin-right: auto;
         }
-
+    
         .video-wrapper {
             position: relative;
             padding-bottom: 56.25%; /* 16:9 aspect ratio */
@@ -132,7 +132,7 @@
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(255, 29, 37, 0.3);
         }
-
+    
         .video-wrapper iframe {
             position: absolute;
             top: 0;
@@ -140,7 +140,7 @@
             width: 100%;
             height: 100%;
         }
-
+    
         .btn {
             display: inline-block;
             background: var(--red);
@@ -152,37 +152,37 @@
             font-size: 1.2rem;
             box-shadow: 0 5px 15px rgba(255, 29, 37, 0.3);
         }
-
+    
         .btn:hover {
             background: #d41920;
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(255, 29, 37, 0.4);
         }
-
+    
         .section {
             padding: 8rem 0;
             min-height: 100vh;
             display: flex;
             align-items: center;
         }
-
+    
         .section h2 {
             text-align: center;
             margin-bottom: 3rem;
             font-size: 3rem;
             color: var(--red);
         }
-
+    
         .about-content {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-
+    
         .about-text {
             margin-bottom: 2rem;
         }
-
+    
         .feature-card {
             background: var(--gray);
             border-radius: 15px;
@@ -191,45 +191,45 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2), -8px -8px 15px rgba(255, 255, 255, 0.1);
         }
-
+    
         .feature-card:hover {
             transform: translateY(-5px);
             box-shadow: 12px 12px 20px rgba(0, 0, 0, 0.3), -12px -12px 20px rgba(255, 255, 255, 0.1);
         }
-
+    
         .feature-card h3 {
             color: var(--red);
             margin-bottom: 1rem;
         }
-
+    
         .features ul {
             list-style-type: none;
         }
-
+    
         .features ul li {
             margin-bottom: 1rem;
             padding-left: 1.5rem;
             position: relative;
         }
-
+    
         .features ul li::before {
             content: '▹';
             color: var(--red);
             position: absolute;
             left: 0;
         }
-
+    
         .contact {
             text-align: center;
         }
-
+    
         footer {
             background: var(--gray);
             color: var(--white);
             text-align: center;
             padding: 2rem 0;
         }
-
+    
         .neumorphic {
             background: var(--gray);
             border-radius: 15px;
@@ -237,25 +237,25 @@
             transition: all 0.3s ease;
             padding: 2rem;
         }
-
+    
         .neumorphic:hover {
             box-shadow: 12px 12px 20px rgba(0, 0, 0, 0.3), -12px -12px 20px rgba(255, 255, 255, 0.1);
         }
-
+    
         .fade-in {
             animation: fadeIn 1s ease-out;
         }
-
+    
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
+    
         /* Glitch effect */
         .glitch {
             position: relative;
         }
-
+    
         .glitch::before,
         .glitch::after {
             content: attr(data-text);
@@ -265,20 +265,20 @@
             width: 100%;
             height: 100%;
         }
-
+    
         .glitch::before {
             left: 2px;
             text-shadow: -2px 0 #ff00c1;
             clip: rect(44px, 450px, 56px, 0);
             animation: glitch-anim 5s infinite linear alternate-reverse;
         }
-
+    
         .glitch::after {
             left: -2px;
             text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
             animation: glitch-anim2 1s infinite linear alternate-reverse;
         }
-
+    
         @keyframes glitch-anim {
             0% { clip: rect(31px, 9999px, 94px, 0); }
             4.166666667% { clip: rect(91px, 9999px, 43px, 0); }
@@ -306,60 +306,73 @@
             95.83333333% { clip: rect(60px, 9999px, 89px, 0); }
             100% { clip: rect(93px, 9999px, 79px, 0); }
         }
-
+    
         @keyframes glitch-anim2 {
             0% { clip: rect(65px, 9999px, 100px, 0); }
             100% { clip: rect(93px, 9999px, 0px, 0); }
         }
-
+    
         /* Responsive styles */
         @media (max-width: 768px) {
+            header {
+                position: relative;
+                padding: 0.5rem 0;
+            }
+    
+            .logo {
+                float: none;
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+    
+            nav {
+                float: none;
+            }
+    
+            nav ul {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+    
+            nav ul li {
+                margin: 0.25rem 0.5rem;
+            }
+    
+            .hero {
+                padding-top: 1rem;
+            }
+    
             .hero h1 {
                 font-size: 3rem;
             }
-
+    
             .hero p {
                 font-size: 1.2rem;
             }
-
+    
             .section h2 {
                 font-size: 2.5rem;
             }
-
-            nav ul li {
-                margin-left: 1rem;
-            }
-
+    
             nav ul li a {
                 font-size: 1rem;
             }
         }
-
+    
         @media (max-width: 480px) {
             .hero h1 {
                 font-size: 2.5rem;
             }
-
+    
             .hero p {
                 font-size: 1rem;
             }
-
+    
             .section h2 {
                 font-size: 2rem;
             }
-
-            nav {
-                float: none;
-                text-align: center;
-                margin-top: 1rem;
-            }
-
-            .logo {
-                float: none;
-                text-align: center;
-                margin-bottom: 1rem;
-            }
-
+    
             nav ul li {
                 display: block;
                 margin: 0.5rem 0;
@@ -471,68 +484,69 @@
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('background-canvas'), alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-
+    
         const geometry = new THREE.PlaneGeometry(50, 50, 50, 50);
         const material = new THREE.MeshBasicMaterial({ color: 0x444444, wireframe: true });
         const grid = new THREE.Mesh(geometry, material);
         scene.add(grid);
-
+    
         camera.position.z = 15;
-
+    
         let mouseX = 0, mouseY = 0;
         let time = 0;
-
+    
         document.addEventListener('mousemove', (event) => {
             mouseX = (event.clientX / window.innerWidth) * 2 - 1;
             mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
         });
-
+    
         function animate() {
             requestAnimationFrame(animate);
-
+    
             const positions = grid.geometry.attributes.position;
-
+    
             for (let i = 0; i < positions.count; i++) {
                 const x = positions.getX(i);
                 const y = positions.getY(i);
                 
-                if ('ontouchstart' in window) {
-                    // For mobile devices: create a ripple effect
-                    const distance = Math.sqrt(x * x + y * y);
-                    const z = Math.sin(distance * 3 - time * 2) * 0.5;
-                    positions.setZ(i, z);
-                } else {
-                    // For desktop: warp based on mouse position
+                // Constant ripple effect
+                const distance = Math.sqrt(x * x + y * y);
+                let z = Math.sin(distance * 2 - time) * 0.2;
+                
+                // Additional warping effect on hover for non-touch devices
+                if (!('ontouchstart' in window)) {
                     const distanceX = x - mouseX * 25;
                     const distanceY = y - mouseY * 25;
-                    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-                    const z = 1 / (1 + distance * 0.5) * 2;
-                    positions.setZ(i, z);
+                    const mouseDistance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                    const warpZ = 1 / (1 + mouseDistance * 0.5) * 2;
+                    z += warpZ * 0.5; // Blend the ripple and warp effects
                 }
+    
+                positions.setZ(i, z);
             }
-
+    
             positions.needsUpdate = true;
             time += 0.05;
-
+    
             renderer.render(scene, camera);
         }
-
+    
         animate();
-
+    
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-
+    
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-
+    
                 const targetId = this.getAttribute('href').substring(1);
                 const targetElement = document.getElementById(targetId);
-
+    
                 if (targetElement) {
                     window.scrollTo({
                         top: targetElement.offsetTop - 70, // Adjust for header height
@@ -541,7 +555,7 @@
                 }
             });
         });
-
+    
         // Fade-in animation on scroll
         const fadeElems = document.querySelectorAll('.fade-in');
         const observer = new IntersectionObserver(entries => {
@@ -551,7 +565,7 @@
                 }
             });
         }, { threshold: 0.1 });
-
+    
         fadeElems.forEach(elem => {
             elem.style.opacity = 0;
             observer.observe(elem);
