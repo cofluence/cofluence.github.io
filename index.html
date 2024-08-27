@@ -21,9 +21,8 @@
             box-sizing: border-box;
         }
     
-        html, body {
-            height: 100%;
-            overflow-x: hidden;
+        html {
+            scroll-behavior: smooth;
         }
     
         body {
@@ -245,12 +244,12 @@
         }
     
         .fade-in {
-            animation: fadeIn 1s ease-out;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
         }
     
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .fade-in.visible {
+            opacity: 1;
         }
     
         /* Glitch effect */
@@ -314,66 +313,110 @@
             100% { clip: rect(93px, 9999px, 0px, 0); }
         }
     
-        /* Responsive styles */
-        @media (max-width: 1024px) {
-            .hero h1 {
-                font-size: 3.5rem;
-            }
-            .hero p {
-                font-size: 1.3rem;
-            }
+        /* Side Circular Nav */
+        .side-nav {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
         }
     
+        .side-nav ul {
+            list-style-type: none;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+    
+        .side-nav li {
+            margin: 15px 0;
+            position: relative;
+        }
+    
+        .side-nav a {
+            display: block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--white);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+    
+        .side-nav a:hover,
+        .side-nav a.active {
+            background-color: var(--red);
+            border-color: var(--red);
+        }
+    
+        .side-nav a span {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--red);
+            color: var(--white);
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+    
+        .side-nav a:hover span,
+        .side-nav a.active span {
+            opacity: 1;
+            transform: translateY(-50%) translateX(-5px);
+        }
+    
+        /* Responsive styles */
         @media (max-width: 768px) {
-            header {
-                position: relative;
-                padding: 1rem 0;
+            header .container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
-            .container {
-                width: 95%;
-            }
+    
             .logo {
                 float: none;
                 text-align: center;
                 margin-bottom: 1rem;
             }
+    
             nav {
                 float: none;
             }
+    
             nav ul {
-                flex-direction: row;
                 justify-content: center;
-                flex-wrap: wrap;
             }
+    
             nav ul li {
-                margin: 0.5rem;
+                margin: 0 0.75rem;
             }
-            .hero h1 {
-                font-size: 3rem;
+    
+            .side-nav {
+                right: 20px;
             }
-            .hero p {
-                font-size: 1.2rem;
+    
+            .side-nav a {
+                width: 15px;
+                height: 15px;
             }
-            .section h2 {
-                font-size: 2.5rem;
+    
+            .side-nav a span {
+                display: none;
             }
         }
     
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            .hero p {
-                font-size: 1rem;
-            }
-            .section h2 {
-                font-size: 2rem;
-            }
-            nav ul li {
-                margin: 0.3rem;
-            }
-            nav ul li a {
-                font-size: 0.9rem;
+        @media (max-height: 500px) {
+            .side-nav {
+                display: none;
             }
         }
     </style>
@@ -396,10 +439,20 @@
         </div>
     </header>
 
+    <nav class="side-nav">
+        <ul>
+            <li><a href="#home" class="active"><span>Home</span></a></li>
+            <li><a href="#about"><span>About</span></a></li>
+            <li><a href="#products"><span>Products</span></a></li>
+            <li><a href="#features"><span>Features</span></a></li>
+            <li><a href="#contact"><span>Contact</span></a></li>
+        </ul>
+    </nav>
+
     <main>
         <section id="home" class="hero">
             <div class="container">
-                <h1 class="fade-in glitch" data-text="Cofluence"><span>Co</span>fluence</h1>
+                <h1 class="glitch" data-text="Cofluence"><span>Co</span>fluence</h1>
                 <p class="fade-in">AI-Powered Influencer Matching 🤖🤝</p>
                 <a href="#" class="btn fade-in">Get Started 🚀</a>
                 <div class="video-container fade-in">
@@ -412,9 +465,9 @@
 
         <section id="about" class="section">
             <div class="container">
-                <h2>About Us</h2>
+                <h2 class="fade-in">About Us</h2>
                 <div class="about-content">
-                    <div class="about-text neumorphic">
+                    <div class="about-text neumorphic fade-in">
                         <p><span style="color: var(--red); font-weight: bold;">Co</span>fluence revolutionizes influencer marketing with AI-powered matching technology. We connect brands with the perfect micro-influencers to maximize engagement and ROI. 📈💡</p>
                         <br>
                         <p>Our mission is to create meaningful connections between brands and influencers, driving authentic engagement and measurable results. 🎯🤝</p>
@@ -431,12 +484,12 @@
 
         <section id="products" class="section">
             <div class="container">
-                <h2>Our Products</h2>
-                <div class="feature-card">
+                <h2 class="fade-in">Our Products</h2>
+                <div class="feature-card fade-in">
                     <h3><span>Co</span>fluence-1 Text Embedding Model 📝</h3>
                     <p>Enables semantic search across our private Instagram dataset using natural language. We've trained a custom text and image embedding model on our private dataset of Instagram influencers, with a custom fine-tuned LLM to enable semantic search using RAG.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card fade-in">
                     <h3><span>Co</span>fluence-1 Dataset 🗄️</h3>
                     <p>Currently holds 1 million unique Instagram user information, providing a vast pool of potential influencers for your campaigns.</p>
                 </div>
@@ -445,8 +498,8 @@
 
         <section id="features" class="section features">
             <div class="container">
-                <h2>Features</h2>
-                <div class="neumorphic">
+                <h2 class="fade-in">Features</h2>
+                <div class="neumorphic fade-in">
                     <ul>
                         <li>💬 Chat with our AI to find the perfect influencers</li>
                         <li>🖼️ Upload product images for AI-powered influencer matching</li>
@@ -459,8 +512,8 @@
 
         <section id="contact" class="section contact">
             <div class="container">
-                <h2>Contact Us</h2>
-                <div class="neumorphic">
+                <h2 class="fade-in">Contact Us</h2>
+                <div class="neumorphic fade-in">
                     <p>📧 Email: cofluenceai@gmail.com</p>
                     <br>
                     <p>Let's connect and revolutionize your influencer marketing strategy! 🚀</p>
@@ -482,90 +535,120 @@
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('background-canvas'), alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-    
+
         const geometry = new THREE.PlaneGeometry(50, 50, 50, 50);
         const material = new THREE.MeshBasicMaterial({ color: 0x444444, wireframe: true });
         const grid = new THREE.Mesh(geometry, material);
         scene.add(grid);
-    
+
         camera.position.z = 15;
-    
+
         let mouseX = 0, mouseY = 0;
         let time = 0;
-    
+
         document.addEventListener('mousemove', (event) => {
             mouseX = (event.clientX / window.innerWidth) * 2 - 1;
             mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
         });
-    
+
         function animate() {
             requestAnimationFrame(animate);
-    
+
             const positions = grid.geometry.attributes.position;
-    
+
             for (let i = 0; i < positions.count; i++) {
                 const x = positions.getX(i);
                 const y = positions.getY(i);
                 
-                // Constant ripple effect
                 const distance = Math.sqrt(x * x + y * y);
                 let z = Math.sin(distance * 2 - time) * 0.2;
                 
-                // Additional warping effect on hover for non-touch devices
                 if (!('ontouchstart' in window)) {
                     const distanceX = x - mouseX * 25;
                     const distanceY = y - mouseY * 25;
                     const mouseDistance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
                     const warpZ = 1 / (1 + mouseDistance * 0.5) * 2;
-                    z += warpZ * 0.5; // Blend the ripple and warp effects
+                    z += warpZ * 0.5;
                 }
-    
+
                 positions.setZ(i, z);
             }
-    
+
             positions.needsUpdate = true;
             time += 0.05;
-    
+
             renderer.render(scene, camera);
         }
-    
+
         animate();
-    
+
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-    
+
+        // Smooth scrolling and side navigation
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.side-nav a');
+        const headerHeight = document.querySelector('header').offsetHeight;
+
+        function setActiveNavLink() {
+            let scrollPosition = window.pageYOffset;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - headerHeight - 10;
+                const sectionBottom = sectionTop + section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+
+        window.addEventListener('scroll', setActiveNavLink);
+        window.addEventListener('load', setActiveNavLink);
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-    
                 const targetId = this.getAttribute('href').substring(1);
                 const targetElement = document.getElementById(targetId);
-    
                 if (targetElement) {
+                    const targetPosition = targetElement.offsetTop - headerHeight;
                     window.scrollTo({
-                        top: targetElement.offsetTop - 70, // Adjust for header height
+                        top: targetPosition,
                         behavior: 'smooth'
                     });
                 }
             });
         });
-    
+
         // Fade-in animation on scroll
         const fadeElems = document.querySelectorAll('.fade-in');
-        const observer = new IntersectionObserver(entries => {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = 1;
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.1 });
-    
+        }, observerOptions);
+
         fadeElems.forEach(elem => {
-            elem.style.opacity = 0;
             observer.observe(elem);
         });
     </script>
