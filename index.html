@@ -31,6 +31,7 @@
             color: var(--white);
             line-height: 1.6;
             font-size: 18px;
+            overflow-x: hidden;
         }
     
         #background-canvas {
@@ -44,8 +45,8 @@
             width: 90%;
             max-width: 1200px;
             margin: 0 auto;
-            overflow: hidden;
-            position: relative;
+            padding: 0 15px;
+            box-sizing: border-box;
         }
     
         header {
@@ -377,6 +378,8 @@
         /* Responsive styles */
         @media (max-width: 768px) {
             header .container {
+                width: 100%;
+                padding: 0 15px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -386,6 +389,7 @@
                 float: none;
                 text-align: center;
                 margin-bottom: 1rem;
+                font-size: 1.5rem;
             }
     
             nav {
@@ -393,11 +397,30 @@
             }
     
             nav ul {
+                flex-wrap: wrap;
                 justify-content: center;
             }
     
             nav ul li {
-                margin: 0 0.75rem;
+                margin: 0.3rem 0.5rem;
+            }
+    
+            nav ul li a {
+                font-size: 0.9rem;
+            }
+    
+            .hero h1 {
+                font-size: 2.5rem;
+                word-break: break-word;
+            }
+    
+            .hero p {
+                font-size: 1.2rem;
+            }
+    
+            .btn {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
             }
     
             .side-nav {
@@ -411,6 +434,21 @@
     
             .side-nav a span {
                 display: none;
+            }
+        }
+    
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+    
+            .hero p {
+                font-size: 1rem;
+            }
+    
+            .btn {
+                font-size: 0.9rem;
+                padding: 0.7rem 1.3rem;
             }
         }
     
@@ -453,9 +491,9 @@
         <section id="home" class="hero">
             <div class="container">
                 <h1 class="glitch" data-text="Cofluence"><span>Co</span>fluence</h1>
-                <p class="fade-in">AI-Powered Influencer Matching 🤖🤝</p>
-                <a href="#" class="btn fade-in">Get Started 🚀</a>
-                <div class="video-container fade-in">
+                <p>AI-Powered Influencer Matching 🤖🤝</p>
+                <a href="#" class="btn">Get Started 🚀</a>
+                <div class="video-container">
                     <div class="video-wrapper">
                         <iframe width="560" height="315" src="https://www.youtube.com/embed/4CTlMlk_vbs?si=fE46VNpNdVvMQwWo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
