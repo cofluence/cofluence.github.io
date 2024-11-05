@@ -8,103 +8,167 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
     <style>
-        :root {
-            --primary-color: #3a86ff;
-            --secondary-color: #8338ec;
-            --background-color: #f0f0f0;
-            --text-color: #333;
-            --card-bg: #ffffff;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-        }
+:root {
+   --primary-color: #3a86ff;
+   --secondary-color: #8338ec;
+   --background-color: #f0f0f0;
+   --text-color: #333;
+   --card-bg: #ffffff;
+   --shadow-color: rgba(0, 0, 0, 0.1);
+}
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-        }
+body {
+   font-family: 'Arial', sans-serif;
+   background-color: var(--background-color);
+   color: var(--text-color);
+   margin: 0;
+   padding: 20px;
+}
 
-        .progress-bar {
-    width: 100%;
-    height: 20px;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 10px 0;
+.progress-bar {
+   width: 100%;
+   height: 20px;
+   background-color: #f0f0f0;
+   border-radius: 10px;
+   overflow: hidden;
+   margin: 10px 0;
 }
 
 .progress {
-    height: 100%;
-    border-radius: 10px;
-    text-align: center;
-    line-height: 20px;
-    color: white;
-    font-weight: bold;
-    transition: width 0.5s ease-in-out;
+   height: 100%;
+   border-radius: 10px;
+   text-align: center;
+   line-height: 20px;
+   color: white;
+   font-weight: bold;
+   transition: width 0.5s ease-in-out;
 }
 
+.dashboard {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+   gap: 20px;
+   grid-auto-flow: dense; /* This helps with better space utilization */
+}
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            grid-auto-flow: dense; /* This helps with better space utilization */
-            }
+/* Add this new class */
+.wide-card {
+   grid-column: span 3; /* Makes the card span 3 columns */
+   position: relative; /* Added this */
+}
 
-            /* Add this new class */
-            .wide-card {
-                grid-column: span 3; /* Makes the card span 3 columns */
-            }
-                    .card {
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 8px 8px 15px var(--shadow-color), -8px -8px 15px rgba(255, 255, 255, 0.5);
-        }
+.card {
+   background-color: var(--card-bg);
+   border-radius: 15px;
+   padding: 20px;
+   box-shadow: 8px 8px 15px var(--shadow-color), -8px -8px 15px rgba(255, 255, 255, 0.5);
+}
 
-        .card h2 {
-            margin-top: 0;
-            color: var(--primary-color);
-        }
+.card h2 {
+   margin-top: 0;
+   color: var(--primary-color);
+}
 
-        .stat {
-            font-size: 2em;
-            font-weight: bold;
-            color: var(--secondary-color);
-        }
+.stat {
+   font-size: 2em;
+   font-weight: bold;
+   color: var(--secondary-color);
+}
 
-        .chart-container {
-            position: relative;
-            height: 300px;
-        }
-
-        @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 1200px) {
-    .wide-card {
-        grid-column: span 2;
-    }
+.chart-container {
+   position: relative;
+   height: 300px;
 }
 
 @media (max-width: 768px) {
-    .wide-card {
-        grid-column: span 1;
-    }
-    
-    .wide-card > div {
-        flex-direction: column;
-    }
-    
-    .wide-card > div > div {
-        margin-right: 0;
-        margin-bottom: 15px;
-    }
+   .dashboard {
+       grid-template-columns: 1fr;
+   }
 }
+
+@media (max-width: 1200px) {
+   .wide-card {
+       grid-column: span 2;
+   }
+}
+
+@media (max-width: 768px) {
+   .wide-card {
+       grid-column: span 1;
+   }
+
+   .wide-card > div {
+       flex-direction: column;
+   }
+
+   .wide-card > div > div {
+       margin-right: 0;
+       margin-bottom: 15px;
+   }
+}
+
+.info-button {
+   display: inline-block;
+   width: 20px;
+   height: 20px;
+   border-radius: 50%;
+   background: #3a86ff;
+   color: white;
+   text-align: center;
+   line-height: 20px;
+   cursor: pointer;
+   margin-left: 10px;
+   font-size: 14px;
+}
+
+.hidden-content {
+   display: none;
+   margin-top: 15px;
+   font-size: 0.9em;
+   line-height: 1.5;
+   color: #666;
+   white-space: pre-line;
+}
+
+.typewriter {
+   overflow: hidden;
+   border-right: .15em solid #666;
+   white-space: pre-line;
+   margin: 0;
+   animation: typing 3.5s steps(40, end),
+              blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+   from { width: 0 }
+   to { width: 100% }
+}
+
+@keyframes blink-caret {
+   from, to { border-color: transparent }
+   50% { border-color: #666; }
+}
+
+.total-score {
+   position: absolute;
+   top: 20px;
+   right: 20px;
+   background-color: #4ecdc4;
+   color: white;
+   padding: 10px 15px;
+   border-radius: 10px;
+   font-weight: bold;
+   font-size: 1.2em;
+   z-index: 1; /* Added this */
+}
+
+.total-message-score {
+           margin-top: 15px;
+           padding-top: 15px;
+           border-top: 1px solid #eee;
+       }
+
+
 
 
     </style>
@@ -158,6 +222,7 @@
         </div>
         <div class="card wide-card">
             <h2>🎯 Brand Compatibility Analysis</h2>
+            <div class="total-score">Total Score: 65/100</div>
             <div style="display: flex; justify-content: space-between; padding: 15px;">
                 <div style="flex: 1; margin-right: 15px;">
                     <h3 style="color: #3a86ff; font-size: 1.1em;">Message Compatibility Score</h3>
@@ -204,27 +269,39 @@
                                 <div class="mini-bar" style="width: 58%; background-color: #4ecdc4;">58</div>
                             </div>
                         </div>
+                        <div class="total-message-score">
+                            <span>TOTAL MESSAGE SCORE:</span>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 33%; background-color: #ff9f43;">33/100</div>
+                            </div>
+                        </div>  
                     </div>
                 </div>
                 
-                <div style="flex: 1; margin-right: 15px;">
-                    <h3 style="color: #3a86ff; font-size: 1.1em;">Demographic Score</h3>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: 85%; background-color: #4ecdc4;">
-                            85/100
-                        </div>
-                    </div>
-                    <p style="font-size: 0.9em; color: #666;">Strong match with luxury champagne consumer profile</p>
-                </div>
+   <div style="flex: 1; margin-right: 15px;">
+       <div style="display: flex; align-items: center;">
+           <h3 style="color: #3a86ff; font-size: 1.1em;">Demographic Score</h3>
+           <div class="info-button" onclick="toggleDemographicInfo()">i</div>
+       </div>
+       <div class="progress-bar">
+           <div class="progress" style="width: 85%; background-color: #4ecdc4;">85/100</div>
+       </div>
+       <p style="font-size: 0.9em; color: #666;"></p>
+       <div id="demographic-info" class="hidden-content"></div>
+   </div>
         
                 <div style="flex: 1;">
+                    <div style="display: flex; align-items: center;">
                     <h3 style="color: #3a86ff; font-size: 1.1em;">Community Strength Score</h3>
+                    <div class="info-button" onclick="toggleCommunityInfo()">i</div>
+                </div>
                     <div class="progress-bar">
                         <div class="progress" style="width: 78%; background-color: #45b7d1;">
                             78/100
                         </div>
                     </div>
-                    <p style="font-size: 0.9em; color: #666;">High engagement and quality audience metrics</p>
+                    <!--<p style="font-size: 0.9em; color: #666;">High engagement and quality audience metrics</p>-->
+                    <div id="community-info" class="hidden-content"></div>
                 </div>
             </div>
         </div>
@@ -315,6 +392,51 @@
     </div>
 
     <script>
+
+function typeWriter(element, text, i = 0) {
+    if (i < text.length) {
+        element.innerHTML += text.charAt(i);
+        setTimeout(() => typeWriter(element, text, i + 1), 20);
+    }
+}
+
+function toggleDemographicInfo() {
+    const infoDiv = document.getElementById('demographic-info');
+    if (infoDiv.style.display === 'none' || !infoDiv.style.display) {
+        infoDiv.style.display = 'block';
+        infoDiv.innerHTML = '';
+        const text = `. Strong presence in France (18.78%) - G.H.Mumm's home market
+. Male-dominated audience (59.41%) aligns with luxury champagne consumption patterns
+. Location in premium urban centers indicates high disposable income
+. Audience composition matches premium champagne consumer demographics`;
+        typeWriter(infoDiv, text);
+    } else {
+        infoDiv.style.display = 'none';
+        infoDiv.innerHTML = '';
+    }
+}
+
+function toggleCommunityInfo() {
+    const infoDiv = document.getElementById('community-info');
+    if (infoDiv.style.display === 'none' || !infoDiv.style.display) {
+        infoDiv.style.display = 'block';
+        infoDiv.innerHTML = '';
+        const text = `. Substantial follower base (588.1K followers)
+. Healthy engagement rate of 0.39%
+. Strong average engagement metrics:
+  . 2.3K average likes per post
+  . 19 comments per post
+  . 62.3K average views
+. Consistent posting schedule (1 post/week)
+. Quality over quantity content strategy`;
+        typeWriter(infoDiv, text);
+    } else {
+        infoDiv.style.display = 'none';
+        infoDiv.innerHTML = '';
+    }
+}
+
+
         // Location Chart
         const locationCtx = document.getElementById('locationChart').getContext('2d');
         new Chart(locationCtx, {
