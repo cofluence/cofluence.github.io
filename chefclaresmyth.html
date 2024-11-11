@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chef Clare Smyth - Influencer Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+:root {
+   --primary-color: #3a86ff;
+   --secondary-color: #8338ec;
+   --background-color: #f0f0f0;
+   --text-color: #333;
+   --card-bg: #ffffff;
+   --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+   font-family: 'Arial', sans-serif;
+   background-color: var(--background-color);
+   color: var(--text-color);
+   margin: 0;
+   padding: 20px;
+}
+
+.progress-bar {
+   width: 100%;
+   height: 20px;
+   background-color: #f0f0f0;
+   border-radius: 10px;
+   overflow: hidden;
+   margin: 10px 0;
+}
+
+.progress {
+   height: 100%;
+   border-radius: 10px;
+   text-align: center;
+   line-height: 20px;
+   color: white;
+   font-weight: bold;
+   transition: width 0.5s ease-in-out;
+}
+
+.dashboard {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+   gap: 20px;
+   grid-auto-flow: dense; /* This helps with better space utilization */
+}
+
+/* Add this new class */
+.wide-card {
+   grid-column: span 3; /* Makes the card span 3 columns */
+   position: relative; /* Added this */
+}
+
+.card {
+   background-color: var(--card-bg);
+   border-radius: 15px;
+   padding: 20px;
+   box-shadow: 8px 8px 15px var(--shadow-color), -8px -8px 15px rgba(255, 255, 255, 0.5);
+}
+
+.card h2 {
+   margin-top: 0;
+   color: var(--primary-color);
+}
+
+.stat {
+   font-size: 2em;
+   font-weight: bold;
+   color: var(--secondary-color);
+}
+
+.chart-container {
+   position: relative;
+   height: 300px;
+}
+
+@media (max-width: 768px) {
+   .dashboard {
+       grid-template-columns: 1fr;
+   }
+}
+
+@media (max-width: 1200px) {
+   .wide-card {
+       grid-column: span 2;
+   }
+}
+
+@media (max-width: 768px) {
+   .wide-card {
+       grid-column: span 1;
+   }
+
+   .wide-card > div {
+       flex-direction: column;
+   }
+
+   .wide-card > div > div {
+       margin-right: 0;
+       margin-bottom: 15px;
+   }
+}
+
+.info-button {
+   display: inline-block;
+   width: 20px;
+   height: 20px;
+   border-radius: 50%;
+   background: #3a86ff;
+   color: white;
+   text-align: center;
+   line-height: 20px;
+   cursor: pointer;
+   margin-left: 10px;
+   font-size: 14px;
+}
+
+.hidden-content {
+   display: none;
+   margin-top: 15px;
+   font-size: 0.9em;
+   line-height: 1.5;
+   color: #666;
+   white-space: pre-line;
+}
+
+.typewriter {
+   overflow: hidden;
+   border-right: .15em solid #666;
+   white-space: pre-line;
+   margin: 0;
+   animation: typing 3.5s steps(40, end),
+              blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+   from { width: 0 }
+   to { width: 100% }
+}
+
+@keyframes blink-caret {
+   from, to { border-color: transparent }
+   50% { border-color: #666; }
+}
+
+.total-score {
+   position: absolute;
+   top: 20px;
+   right: 20px;
+   background-color: #4ecdc4;
+   color: white;
+   padding: 10px 15px;
+   border-radius: 10px;
+   font-weight: bold;
+   font-size: 1.2em;
+   z-index: 1; /* Added this */
+}
+
+.total-message-score {
+           margin-top: 15px;
+           padding-top: 15px;
+           border-top: 1px solid #eee;
+       }
+
+
+       .list-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 10px 15px;
+  background: #3a86ff;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+.sidebar {
+  position: fixed;
+  left: -300px;
+  top: 0;
+  height: 100%;
+  width: 300px;
+  background: white;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  transition: left 0.3s ease;
+  z-index: 999;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.sidebar-content {
+  padding: 20px;
+  padding-top: 70px;
+}
+
+.ranking-list {
+  list-style: none;
+  padding: 0;
+}
+
+.ranking-list li {
+  margin: 10px 0;
+}
+
+.ranking-list a {
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  color: #333;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+
+.ranking-list a:hover {
+  background: #f0f0f0;
+}
+
+.score {
+  color: #3a86ff;
+  font-weight: bold;
+}
+
+.download-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  background: #3a86ff;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+.download-button:hover {
+  background: #45b7d1;
+}
+
+.download-icon {
+  font-size: 20px;
+}
+
+.tooltip {
+  position: absolute;
+  background: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  right: 50px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.download-button:hover .tooltip {
+  opacity: 1;
+}
+
+.loading-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 2000;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="download-button" onclick="downloadAsPDF()">
+        <span class="download-icon">📥</span>
+        <span class="tooltip">Download PDF</span>
+      </div>
+
+
+    <div class="list-button" onclick="toggleSidebar()">
+        <span>☰</span>
+      </div>
+        <div class="sidebar" id="rankingSidebar">
+            <div class="sidebar-content">
+                <h3>Influencer Rankings</h3>
+                <ul class="ranking-list">
+                    <li><a href="chefclaresmyth.html">Chef Clare Smyth <span class="score">72/100</span></a></li>
+                    <li><a href="alainducasse.html">Alain Ducasse <span class="score">68/100</span></a></li>
+                    <li><a href="elbullifoundation_ferranadria.html">El Bulli Foundation <span class="score">67/100</span></a></li>
+                    <li><a href="tetsuyasydney.html">Tetsuya Sydney <span class="score">67/100</span></a></li>
+                    <li><a href="nikoromito.html">Niko Romito <span class="score">58/100</span></a></li>
+                    <li><a href="compareallmid.html" class="compare-all">🔄 Compare All</a></li>
+                </ul>
+            </div>
+        </div>
+
+    <div class="dashboard">
+        <div class="card">
+            <h2>📊 Profile Overview</h2>
+            <p><strong>Username:</strong> @chefclaresmyth</p>
+            <p><strong>Followers:</strong> <span class="stat">338.8K</span></p>
+            <p><strong>Engagement Rate:</strong> <span class="stat">0.36%</span></p>
+            <p><strong>Location:</strong> United Kingdom</p>
+        </div>
+
+        <div class="card">
+            <h2>📍 Audience Location</h2>
+            <p>Most of the audience is located in <span class="stat">United Kingdom (24.66%)</span></p>
+            <div class="chart-container">
+                <canvas id="locationChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🏙️ Top Cities</h2>
+            <div class="chart-container">
+                <canvas id="cityChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>👥 Audience Demographics</h2>
+            <p><strong>Gender:</strong> <span class="stat">59.58% Male</span></p>
+            <div class="chart-container">
+                <canvas id="genderChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>👴👩 Age Demographics</h2>
+            <div class="chart-container">
+                <canvas id="ageChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📈 Engagement Stats</h2>
+            <p><strong>Avg. Likes:</strong> <span class="stat">3.1K</span></p>
+            <p><strong>Avg. Comments:</strong> <span class="stat">40</span></p>
+            <p><strong>Avg. Views:</strong> <span class="stat">78.7K</span></p>
+            <p><strong>Avg. Posts per week:</strong> <span class="stat">2.8</span></p>
+        </div>
+        <div class="card wide-card">
+            <h2>🎯 Brand Compatibility Analysis</h2>
+            <div class="total-score">Total Score: 72/100</div>
+            <div style="display: flex; justify-content: space-between; padding: 15px;">
+                <div style="flex: 1; margin-right: 15px;">
+                    <h3 style="color: #3a86ff; font-size: 1.1em;">Message Compatibility Score</h3>
+                    <div class="word-scores">
+                        <div class="word-score">
+                            <span>EXCITEMENT:</span>
+                            <div class="mini-progress">
+                                <div class="mini-bar" style="width: 21%; background-color: #ff6b6b;">21</div>
+                            </div>
+                        </div>
+                        <div class="word-score">
+                            <span>TENSION:</span>
+                            <div class="mini-progress">
+                                <div class="mini-bar" style="width: 14%; background-color: #ff6b6b;">14</div>
+                            </div>
+                        </div>
+                        <div class="word-score">
+                            <span>MODERNITY:</span>
+                            <div class="mini-progress">
+                                <div class="mini-bar" style="width: 70%; background-color: #4ecdc4;">70</div>
+                            </div>
+                        </div>
+                        <div class="word-score">
+                            <span>HIGH TECH:</span>
+                            <div class="mini-progress">
+                                <div class="mini-bar" style="width: 44%; background-color: #ff9f43;">44</div>
+                            </div>
+                        </div>
+                        <div class="word-score">
+                            <span>CELEBRATION:</span>
+                            <div class="mini-progress">
+                                <div class="mini-bar" style="width: 32%; background-color: #ff9f43;">32</div>
+                            </div>
+                        </div>
+                        <div class="word-score">
+                            <span>AVANT GARDE:</span>
+                            <div class="mini-progress">
+                                <div class="mini-bar" style="width: 49%; background-color: #ff9f43;">49</div>
+                            </div>
+                        </div>
+                        <div class="word-score">
+                            <span>LUXURY:</span>
+                            <div class="mini-progress">
+                                <div class="mini-bar" style="width: 72%; background-color: #4ecdc4;">72</div>
+                            </div>
+                        </div>
+                        <div class="total-message-score">
+                            <span>TOTAL MESSAGE SCORE:</span>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 43%; background-color: #ff9f43;">43/100</div>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+                
+   <div style="flex: 1; margin-right: 15px;">
+       <div style="display: flex; align-items: center;">
+        <h3 style="color: #3a86ff; font-size: 1.1em;">Demographic Score</h3>
+        <div class="info-button" onclick="toggleDemographicInfo()">i</div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" style="width: 90%; background-color: #4ecdc4;">90/100</div>
+        </div>
+        <p style="font-size: 0.9em; color: #666;"></p>
+        <div id="demographic-info" class="hidden-content"></div>
+        </div>
+        
+        <div style="flex: 1;">
+            <div style="display: flex; align-items: center;">
+            <h3 style="color: #3a86ff; font-size: 1.1em;">Community Strength Score</h3>
+            <div class="info-button" onclick="toggleCommunityInfo()">i</div>
+        </div>
+            <div class="progress-bar">
+                <div class="progress" style="width: 82%; background-color: #45b7d1;">
+                    82/100
+                </div>
+                    </div>
+                    <!--<p style="font-size: 0.9em; color: #666;">High engagement and quality audience metrics</p>-->
+                    <div id="community-info" class="hidden-content"></div>
+                </div>
+            </div>
+        </div>
+        
+        <style>
+        .wide-card {
+            grid-column: span 3;
+        }
+        
+        .word-scores {
+            font-size: 0.85em;
+        }
+        
+        .word-score {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        
+        .word-score span {
+            width: 100px;
+            display: inline-block;
+        }
+        
+        .mini-progress {
+            flex: 1;
+            height: 12px;
+            background-color: #f0f0f0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-left: 10px;
+        }
+        
+        .mini-bar {
+            height: 100%;
+            color: white;
+            font-size: 0.8em;
+            line-height: 12px;
+            text-align: center;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress {
+            height: 100%;
+            border-radius: 10px;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            font-weight: bold;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        @media (max-width: 1200px) {
+            .wide-card {
+                grid-column: span 2;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .wide-card {
+                grid-column: span 1;
+            }
+            
+            .wide-card > div {
+                flex-direction: column;
+            }
+            
+            .wide-card > div > div {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+        </style>
+
+        <div class="card">
+            <h2>🎨 Content Attributes</h2>
+            <div id="wordCloud" style="width: 100%; height: 300px; position: relative;"></div>
+        </div>
+    </div>
+
+    <script>
+
+function downloadAsPDF() {
+    const dashboard = document.querySelector('.dashboard');
+    const filename = window.location.pathname.split('/').pop().replace('.html', '');
+    
+    // Get viewport dimensions
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    const opt = {
+        margin: 10,
+        filename: `${filename}.pdf`,
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { 
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            width: viewportWidth,
+            height: viewportHeight,
+            onclone: function(clonedDoc) {
+                const clonedDashboard = clonedDoc.querySelector('.dashboard');
+                clonedDashboard.style.width = `${viewportWidth}px`;
+                clonedDashboard.style.height = `${viewportHeight}px`;
+                clonedDashboard.style.transform = 'none';
+                clonedDashboard.style.margin = '0';
+                clonedDashboard.style.padding = '10px';
+            }
+        },
+        jsPDF: { 
+            unit: 'pt',
+            format: [viewportWidth * 0.75, viewportHeight * 0.75],
+            orientation: 'landscape',
+            putOnlyUsedFonts: true,
+            compress: true,
+            hotfixes: ['px_scaling'] // Added this single line to prevent blank page
+        }
+    };
+
+    const loadingIndicator = document.createElement('div');
+    loadingIndicator.className = 'loading-indicator';
+    loadingIndicator.innerHTML = 'Generating PDF...';
+    document.body.appendChild(loadingIndicator);
+
+    html2pdf()
+        .from(dashboard)
+        .set(opt)
+        .save()
+        .then(() => {
+            document.body.removeChild(loadingIndicator);
+        });
+}
+
+
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('rankingSidebar');
+  sidebar.classList.toggle('active');
+}
+
+// Close sidebar when clicking outside
+document.addEventListener('click', function(event) {
+  const sidebar = document.getElementById('rankingSidebar');
+  const listButton = document.querySelector('.list-button');
+  
+  if (!sidebar.contains(event.target) && !listButton.contains(event.target)) {
+    sidebar.classList.remove('active');
+  }
+});
+
+
+
+function typeWriter(element, text, i = 0) {
+    if (i < text.length) {
+        element.innerHTML += text.charAt(i);
+        setTimeout(() => typeWriter(element, text, i + 1), 20);
+    }
+}
+
+function toggleDemographicInfo() {
+    const infoDiv = document.getElementById('demographic-info');
+    if (infoDiv.style.display === 'none' || !infoDiv.style.display) {
+        infoDiv.style.display = 'block';
+        infoDiv.innerHTML = '';
+        const text = `. Strong presence in United Kingdom (24.66%) - Key luxury market
+. Male-dominated audience (59.58%) aligns with luxury champagne consumption patterns
+. Location in premium urban centers (London 10.16%) indicates high disposable income
+. 89.76% of audience is above 18 years old - legal drinking age demographic`;
+        typeWriter(infoDiv, text);
+    } else {
+        infoDiv.style.display = 'none';
+        infoDiv.innerHTML = '';
+    }
+}
+
+function toggleCommunityInfo() {
+    const infoDiv = document.getElementById('community-info');
+    if (infoDiv.style.display === 'none' || !infoDiv.style.display) {
+        infoDiv.style.display = 'block';
+        infoDiv.innerHTML = '';
+        const text = `. Substantial follower base (338.8K followers)
+. Healthy engagement rate of 0.36%
+. Strong average engagement metrics:
+  . 3.1K average likes per post
+  . 40 comments per post
+  . 78.7K average views
+. Consistent posting schedule (2.8 posts/week)
+. Quality content with high engagement`;
+        typeWriter(infoDiv, text);
+    } else {
+        infoDiv.style.display = 'none';
+        infoDiv.innerHTML = '';
+    }
+}
+
+
+        // Location Chart
+        const locationCtx = document.getElementById('locationChart').getContext('2d');
+        new Chart(locationCtx, {
+            type: 'bar',
+            data: {
+                labels: ['United Kingdom', 'United States', 'Mexico', 'Australia', 'Brazil'],
+                datasets: [{
+                    label: 'Audience by Country',
+                    data: [24.66, 16.02, 5.72, 4.18, 3.56],
+                    backgroundColor: 'rgba(58, 134, 255, 0.8)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // City Chart
+        const cityCtx = document.getElementById('cityChart').getContext('2d');
+        new Chart(cityCtx, {
+        type: 'bar',
+        data: {
+            labels: ['London', 'New York City', 'Mexico City', 'Melbourne', 'Los Angeles'],
+            datasets: [{
+                label: 'Audience by City',
+                data: [10.16, 2.04, 1.35, 1.3, 1.26],
+                backgroundColor: 'rgba(131, 56, 236, 0.8)'
+            }]
+        },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gender Chart
+        const genderCtx = document.getElementById('genderChart').getContext('2d');
+        new Chart(genderCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Male', 'Female'],
+                datasets: [{
+                    data: [59.58, 40.42],
+                    backgroundColor: ['rgba(131, 56, 236, 0.8)', 'rgba(251, 86, 7, 0.8)']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Age Chart
+        const ageCtx = document.getElementById('ageChart').getContext('2d');
+        new Chart(ageCtx, {
+        type: 'bar',
+        data: {
+            labels: ['13-17', '18-24', '25-34', '35-44', '45-64'],
+            datasets: [{
+                label: 'Age Distribution',
+                data: [2.38, 20.18, 44.76, 24.41, 8.41],
+                backgroundColor: 'rgba(251, 86, 7, 0.8)'
+            }]
+        },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+       
+        // Audience Type Chart
+        /*
+        const audienceTypeCtx = document.getElementById('audienceTypeChart').getContext('2d');
+        new Chart(audienceTypeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Real people', 'Influencers', 'Mass followers', 'Suspicious mass followers', 'Bots & fakes'],
+                datasets: [{
+                    data: [56.28, 7.14, 17.85, 12.78, 5.95],
+                    backgroundColor: [
+                        'rgba(58, 134, 255, 0.8)',
+                        'rgba(131, 56, 236, 0.8)',
+                        'rgba(251, 86, 7, 0.8)',
+                        'rgba(255, 190, 11, 0.8)',
+                        'rgba(251, 86, 7, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+        */
+
+// First, add this CSS to your existing styles section
+const styleSheet = document.createElement("style");
+styleSheet.textContent = `
+    .flip-icon {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        cursor: pointer;
+        background: rgba(58, 134, 255, 0.1);
+        padding: 8px;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+    }
+    .flip-icon:hover {
+        transform: scale(1.1);
+        background: rgba(58, 134, 255, 0.2);
+    }
+    .visualization-container {
+        width: 100%;
+        height: 300px;
+        position: relative;
+    }
+`;
+document.head.appendChild(styleSheet);
+
+// Modified Word Cloud and Bar Graph Code
+const words = [
+    { text: "relaxation", size: 80 },
+    { text: "calm", size: 72 },
+    { text: "low-tech", size: 55 },
+    { text: "traditional", size: 53 },
+    { text: "luxury", size: 72 },
+    { text: "modesty", size: 59 },
+    { text: "simplicity", size: 55 },
+    { text: "old-fashioned", size: 28 },
+    { text: "modernity", size: 70 },
+    { text: "avant garde", size: 49 },
+    { text: "celebration", size: 32 },
+    { text: "excitement", size: 21 },
+    { text: "high tech", size: 44 },
+    { text: "tension", size: 14 }
+];
+
+// Create container divs
+const containerDiv = document.getElementById('wordCloud');
+containerDiv.innerHTML = `
+    <div class="visualization-container">
+        <div id="wordCloudView" style="width: 100%; height: 100%;"></div>
+        <div id="barGraphView" style="width: 100%; height: 100%; display: none;"></div>
+        <svg class="flip-icon" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="#3a86ff" d="M19,8l-4,4h3c0,3.31-2.69,6-6,6c-1.01,0-1.97-0.25-2.8-0.7l-1.46,1.46C8.97,19.54,10.43,20,12,20
+            c4.42,0,8-3.58,8-8h3L19,8z M6,12c0-3.31,2.69-6,6-6c1.01,0,1.97,0.25,2.8,0.7l1.46-1.46C15.03,4.46,13.57,4,12,4
+            c-4.42,0-8,3.58-8,8H1l4,4l4-4H6z"/>
+        </svg>
+    </div>
+`;
+
+const width = containerDiv.offsetWidth;
+const height = 300;
+const radius = Math.min(width, height) / 2;
+
+let currentView = 'wordCloud';
+let animationFrameId = null;
+
+// Create Word Cloud
+function createWordCloud() {
+    const svg = d3.select("#wordCloudView")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    const container = svg.append("g")
+        .attr("transform", `translate(${width/2},${height/2})`);
+
+    // Create tooltip
+    const tooltip = d3.select("#wordCloudView")
+        .append("div")
+        .style("position", "absolute")
+        .style("visibility", "hidden")
+        .style("background-color", "rgba(0,0,0,0.8)")
+        .style("color", "white")
+        .style("padding", "5px")
+        .style("border-radius", "5px")
+        .style("font-size", "12px")
+        .style("pointer-events", "none")
+        .style("z-index", "1000");
+
+    // Calculate positions
+    function calculatePositions() {
+        const phi = Math.PI * (3 - Math.sqrt(5));
+        words.forEach((word, i) => {
+            const y = 1 - (i / (words.length - 1)) * 2;
+            const r = Math.sqrt(1 - y * y);
+            const theta = phi * i;
+            
+            word.x = (r * Math.cos(theta)) * radius * 0.7;
+            word.y = y * radius * 0.7;
+            word.z = (r * Math.sin(theta)) * radius * 0.7;
+        });
+    }
+
+    calculatePositions();
+
+    // Create words
+    const texts = container.selectAll("text")
+        .data(words)
+        .enter()
+        .append("text")
+        .style("font-size", d => `${d.size * 0.8}px`)
+        .style("font-family", "Arial")
+        .style("fill", d => `hsl(${d.size * 2}, 70%, 50%)`)
+        .style("cursor", "pointer")
+        .style("text-anchor", "middle")
+        .style("dominant-baseline", "middle")
+        .text(d => d.text)
+        .on("mouseover", function(event, d) {
+            d3.select(this)
+                .transition()
+                .duration(200)
+                .style("font-size", `${d.size * 0.9}px`);
+                
+            tooltip.style("visibility", "visible")
+                .html(`${d.text}<br>Score: ${d.size}`)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 10) + "px");
+        })
+        .on("mousemove", function(event) {
+            tooltip.style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 10) + "px");
+        })
+        .on("mouseout", function(event, d) {
+            d3.select(this)
+                .transition()
+                .duration(200)
+                .style("font-size", `${d.size * 0.8}px`);
+                
+            tooltip.style("visibility", "hidden");
+        });
+
+    let angle = 0;
+    function animate() {
+        angle += 0.002;
+        
+        texts
+            .attr("transform", d => {
+                const newX = Math.cos(angle) * d.x - Math.sin(angle) * d.z;
+                const newZ = Math.sin(angle) * d.x + Math.cos(angle) * d.z;
+                const scale = (newZ + radius) / (2 * radius);
+                return `translate(${newX},${d.y}) scale(${0.7 + scale * 0.3})`;
+            })
+            .style("opacity", d => {
+                const newZ = Math.sin(angle) * d.x + Math.cos(angle) * d.z;
+                return 0.4 + ((newZ + radius) / (2 * radius)) * 0.6;
+            });
+
+        animationFrameId = requestAnimationFrame(animate);
+    }
+
+    animate();
+}
+
+// Create Bar Graph
+function createBarGraph() {
+    const margin = {top: 20, right: 20, bottom: 70, left: 60};
+    const graphWidth = width - margin.left - margin.right;
+    const graphHeight = height - margin.top - margin.bottom;
+
+    const svg = d3.select("#barGraphView")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    const g = svg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // Sort words by size
+    const sortedWords = [...words].sort((a, b) => b.size - a.size);
+
+    // Scales
+    const x = d3.scaleBand()
+        .range([0, graphWidth])
+        .domain(sortedWords.map(d => d.text))
+        .padding(0.2);
+
+    const y = d3.scaleLinear()
+        .range([graphHeight, 0])
+        .domain([0, d3.max(words, d => d.size)]);
+
+    // Add bars
+    g.selectAll(".bar")
+        .data(sortedWords)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", d => x(d.text))
+        .attr("y", d => y(d.size))
+        .attr("width", x.bandwidth())
+        .attr("height", d => graphHeight - y(d.size))
+        .attr("fill", d => `hsl(${d.size * 2}, 70%, 50%)`);
+
+    // Add axes
+    g.append("g")
+        .attr("transform", `translate(0,${graphHeight})`)
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .attr("transform", "rotate(-45)")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em");
+
+    g.append("g")
+        .call(d3.axisLeft(y));
+
+    // Add labels
+    g.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", 0 - (graphHeight / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Score");
+}
+
+// Initialize Word Cloud
+createWordCloud();
+
+// Add flip icon click handler
+document.querySelector('.flip-icon').addEventListener('click', function() {
+    if (currentView === 'wordCloud') {
+        // Switch to bar graph
+        document.getElementById('wordCloudView').style.display = 'none';
+        document.getElementById('barGraphView').style.display = 'block';
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+        d3.select("#wordCloudView").selectAll("*").remove();
+        if (!document.querySelector("#barGraphView svg")) {
+            createBarGraph();
+        }
+        currentView = 'barGraph';
+    } else {
+        // Switch to word cloud
+        document.getElementById('barGraphView').style.display = 'none';
+        document.getElementById('wordCloudView').style.display = 'block';
+        d3.select("#barGraphView").selectAll("*").remove();
+        createWordCloud();
+        currentView = 'wordCloud';
+    }
+});
+    </script>
+</body>
+</html>
